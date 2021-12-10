@@ -21,10 +21,6 @@ inputButton.addEventListener("click", addNewTodo);
 searchButton.addEventListener("click", searchTodo);
 todoListDiv.addEventListener("click", checkUpdateDeleteHandler);
 
-// functions
-
-// init
-
 updateDom();
 
 function updateDom(todo) {
@@ -50,8 +46,9 @@ function addNewTodo(e) {
 
   if (data) {
     const newTodo = {
+      _id: randomId(),
       todo: data.trim(),
-      data: new Date(),
+      date: new Date(),
       isDone: false,
     };
     inputText.value = "";
@@ -106,7 +103,7 @@ function checkUpdateDeleteHandler(event) {
   if (item.classList[0] === "done__button") {
     checkTodo(item.parentElement);
   } else if (item.classList[0] === "update__button") {
-    updateTodo(item.parentElement);
+    updateTodo(event, item.parentElement);
   } else if (item.classList[0] === "delete__button") {
     deleteTodo(item.parentElement);
   }
@@ -122,54 +119,61 @@ function checkTodo(element) {
   updateDom();
 }
 
-// // update todo list
-function updateTodo(element) {
+// update todo list
+let updatElementeData;
+function updateTodo(event, element) {
+  event.stopPropagation();
   updatePopup.style.display = "block";
-
-  const data = element.children[1].innerText;
-    const todos = getData();
-    const index = todos.findIndex((val) => val.todo === data);
-    console.log("The update index " + index);
-    if (index >= 0) {
-      console.log(todos[index]);
-    }
-  updateSave.addEventListener("click", (e) => {
-    e.preventDefault();
-    
-    // const index = todos.findIndex((val) => val.todo === data);
-    // todos[index].todo = updatedInput.value;
-    // saveData(todos);
-    // updateDom();
-    updatePopup.style.display = "none";
-  });
-  updateCancel.addEventListener("click", () => {
-    updatePopup.style.display = "none";
-    return;
-  });
+  updatElementeData = element.children[1].innerText;
 }
 
-// //delete todo list
-// function deleteTodo(element) {
-//   popup.style.display = "block";
-//   const data = element.children[1].innerText;
-//   const todoData = getDataFromLocalServer();
+updateSave.addEventListener("click", (e) => {
+  const todos = getData();
+  const index = todos.findIndex((val) => val.todo === updatElementeData);
+  console.log("The update index " + index);
+  let sortData;
+  if (index !== -1) {
+    sortData = todos[index];
+  }
+  const inputValue = updatedInput.value;
+  todos.forEach((obj) => {
+    if (obj._id === sortData._id) {
+      obj.todo = inputValue;
+    }
+  });
+  saveData(todos, true);
+  updateDom();
+  updatedInput.value = "";
+  updatePopup.style.display = "none";
+});
 
-//   deleteConfirm.addEventListener("click", function (event) {
-//     event.preventDefault();
-//     const todoData = getDataFromLocalServer();
-//     const index = todoData.findIndex((val) => val.todo === data);
-//     todoData.splice(index, 1);
-//     console.log(todoData);
-//     saveDataInLocalStorage(todoData);
-//     updateDom();
-//     popup.style.display = "none";
-//   });
-//   deleteCancel.addEventListener("click", function (event) {
-//     event.preventDefault();
-//     popup.style.display = "none";
-//     return;
-//   });
-// }
+updateCancel.addEventListener("click", () => {
+  updatePopup.style.display = "none";
+});
+
+//delete todo list
+let deleteData;
+function deleteTodo(element) {
+  popup.style.display = "block";
+  deleteData = element.children[1].innerText;
+}
+
+deleteConfirm.addEventListener("click", function (event) {
+  event.stopPropagation();
+  const todoData = getData();
+  const index = todoData.findIndex((val) => val.todo === deleteData);
+  todoData.splice(index, 1);
+  console.log(todoData);
+  saveData(todoData, true);
+  updateDom();
+  popup.style.display = "none";
+});
+
+deleteCancel.addEventListener("click", function (event) {
+  event.stopPropagation();
+  event.preventDefault();
+  popup.style.display = "none";
+});
 
 // save data in local storage
 function saveData(todo, params) {
@@ -202,120 +206,16 @@ function getData() {
   }
 }
 
-// // create a new todo
-// function createNewTodo(event) {
-//   event.preventDefault();
-//   const data = inputText.value;
-//   if (data) {
-//     inputText.value = "";
-//     const newData = {
-//       todo: data.trim(),
-//       isDone: false,
-//     };
-//     saveDataInLocalStorage(newData);
-//     updateDom();
-//   } else {
-//     alert("Enter a todo");
-//   }
-// }
+function randomId() {
+  let id = "";
+  for (let index = 0; index < 10; index++) {
+    id += Math.trunc(Math.random() * 10).toString();
+  }
+  return id;
+}
 
-// // search todo
-// function searchTodo(event) {
-//   event.preventDefault();
-
-//   const data = searchInput.value;
-//   if (data) {
-//     const sortedData = todos.filter((obj) =>
-//       Object.values(obj).some((value) => {
-//         console.log(typeof value, value);
-//         if (value === typeof String) {
-//           return value.includes(data);
-//         }
-//       })
-//     );
-//     console.log(sortedData);
-//     if (sortedData.length > 0) {
-//       setTimeout(() => {
-//         updateDom(sortedData);
-//       }, 2000);
-//     } else {
-//       todoListDiv.innerHTML = "";
-//       todoListDiv.insertAdjacentHTML(
-//         "beforeend",
-//         `<div class="todo">
-//           <li>No Data Found</li>
-//          </div>`
-//       );
-//     }
-//   } else {
-//     alert("Please enter a keyword");
-//   }
-// }
-
-// // follow keyStoke and search
-// searchInput.onkeyup = function () {
-//   const data = this.value;
-//   if (data.length === 0) {
-//     updateDom();
-//   }
-//   //   else {
-//   //     const sortedData = todos.filter((obj) =>
-//   //       Object.values(obj).some((value) => value.includes(data))
-//   //     );
-
-//   //     if (sortedData.length > 0) {
-//   //       updateDom(sortedData);
-//   //     } else {
-//   //       todoListDiv.innerHTML = "";
-//   //       todoListDiv.insertAdjacentHTML(
-//   //         "beforeend",
-//   //         `<div class="todo">
-//   //           <li>No Data Found</li>
-//   //           </div>`
-//   //       );
-//   //     }
-//   //   }
-// };
-
-// function checkUpdateDeleteHandler(event) {
-//   let item = event.target;
-//   // console.log(item);
-
-//   if (item.classList[0] === "done__button") {
-//     checkTodo(item.parentElement);
-//   } else if (item.classList[0] === "update__button") {
-//     updateTodo(item.parentElement);
-//   } else if (item.classList[0] === "delete__button") {
-//     deleteTodo(item.parentElement);
-//   }
-// }
-
-// // check todo list
-// function checkTodo(element) {
-
-//   console.log();
-
-//   const data = element.children[1].innerText;
-//   const todoList = getDataFromLocalServer();
-//   const index = todoList.findIndex((val) => val.todo === data);
-//   todoList[index].isDone = !todoList[index].isDone;
-//   saveDataInLocalStorage(todoList);
-//   updateDom();
-// }
-
-// // //Update dom
-// function updateDom() {
-//   todoListDiv.innerHTML = "";
-//   const listOfTodo = getDataFromLocalServer();
-//   listOfTodo.forEach((value) =>
-//     todoListDiv.insertAdjacentHTML(
-//       "beforeend",
-//       `<div class="todo">
-//       <button class="done__button"><i class="fas fa-check"></i></button>
-//       <li class=${value.isDone ? "complete" : ""}>${value.todo}</li>
-//       <button class="update__button"><i class="fas fa-pen"></i></button>
-//       <button class="delete__button"><i class="fas fa-trash"></i></button>
-//     </div>`
-//     )
-//   );
-// }
+/**
+ *
+ * github.com/jsunnykhan/todo
+ *
+ */

@@ -104,7 +104,7 @@ form button:hover {
 .todo li {
   clear: both;
   display: inline-block;
-  overflow: inherit;
+  overflow: hidden;
   white-space: nowrap;
   flex: 1;
   min-width: 13rem;
