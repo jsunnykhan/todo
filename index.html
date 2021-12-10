@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <script type="module" src="./app.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>Todo-App</h1>
+      </header>
+
+      <form>
+        <input
+          type="text"
+          placeholder="Create new todos"
+          class="todo__input"
+          autofocus
+        />
+        <button class="todo__button" type="submit">
+          <i class="fas fa-plus"></i>
+        </button>
+      </form>
+
+      <form>
+        <input type="text" placeholder="Search" class="search__input" />
+        <button class="search__button" type="submit">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+
+      <div class="todo__container">
+        <ul class="todo__list">
+          <!-- <div class="todo">
+            <button class="done__button" type="submit"><i class="fas fa-check"></i></button>
+            <li class="line">Create a Todolist</li>
+            <button class="update__button" type="submit"><i class="fas fa-pen"></i></button>
+            <button class="delete__button" type="submit"><i class="fas fa-trash"></i></button>
+          </div> -->
+        </ul>
+      </div>
+    </div>
+
+    <div class="popup">
+      <div class="popup__content">
+        <h1>Do you want to delete?</h1>
+        <button class="popup__yesbtn" type="submit">Yes</button>
+        <button class="popup__nobtn" type="submit">No</button>
+      </div>
+    </div>
+
+    <div class="popup_update">
+      <div class="popup__update__content">
+        <h1>Update Todo</h1>
+        <input type="text" class="update__text" autofocus />
+        <div>
+          <button class="popup__savebtn" type="submit">Save</button>
+          <button class="popup__cancelbtn" type="submit">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
