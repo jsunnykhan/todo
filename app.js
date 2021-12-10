@@ -25,6 +25,7 @@ updateDom();
 
 function updateDom(todo) {
   todoListDiv.innerText = "";
+  searchInput.value = "";
   const todos = todo ? todo : getData();
 
   todos.forEach((obj) => {
